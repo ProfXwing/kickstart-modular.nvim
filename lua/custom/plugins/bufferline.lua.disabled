@@ -1,0 +1,29 @@
+return {
+  'akinsho/bufferline.nvim',
+  version = '*',
+  event = 'VeryLazy',
+  dependencies = 'nvim-tree/nvim-web-devicons',
+  keys = {
+    { '<C-Tab>', '<cmd>BufferLineCycleNext<CR>', desc = 'Next Buffer' },
+    { '<C-S-Tab>', '<cmd>BufferLineCyclePrev<CR>', desc = 'Prev Buffer' },
+  },
+  opts = {
+    options = {
+      diagnostics = 'nvim_lsp',
+      always_show_bufferline = false,
+      offsets = {
+        {
+          filetype = 'NvimTree',
+          text = function()
+            return vim.fn.getcwd()
+          end,
+          highlight = 'Directory',
+          text_align = 'left',
+        },
+      },
+      disabled_filetypes = {
+        'NvimTree',
+      },
+    },
+  },
+}

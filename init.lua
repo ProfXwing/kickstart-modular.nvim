@@ -35,9 +35,6 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -94,6 +91,9 @@ vim.opt.scrolloff = 10
 
 -- Display long lines as just one line
 vim.opt.wrap = false
+
+-- buffer tab labels
+vim.opt.guitablabel = '[%N] %t'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -228,6 +228,7 @@ require('lazy').setup({
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
+        ['<leader>p'] = { name = '[P]references', _ = 'which_key_ignore' },
         ['<leader>th'] = { name = 'Toggle [H]orizontal Terminal' },
         ['<leader>tv'] = { name = 'Toggle [V]ertical Terminal' },
         ['<leader>tn'] = { name = 'Toggle Terminal in [N]ew Tab' },
@@ -811,6 +812,7 @@ require('lazy').setup({
   },
 })
 
+require 'custom.keymaps.preferences'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 

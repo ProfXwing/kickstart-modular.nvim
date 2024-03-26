@@ -12,6 +12,9 @@ return {
           prev = '<C-[>',
           dismiss = '<Esc>',
         },
+        disabled_filetypes = {
+          'NvimTree',
+        },
       },
     }
   end,

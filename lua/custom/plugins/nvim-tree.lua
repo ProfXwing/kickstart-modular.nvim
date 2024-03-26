@@ -13,6 +13,16 @@ return {
         enable = true,
         update_cwd = false,
       },
+      tab = {
+        sync = {
+          open = true,
+          close = true,
+          ignore = {},
+        },
+      },
+      filters = {
+        git_ignored = false,
+      },
     }
   end,
   keys = {
