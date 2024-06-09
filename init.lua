@@ -52,6 +52,8 @@ vim.opt.breakindent = true
 
 -- tabs are 4 spaces
 vim.opt.tabstop = 4
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
 
 -- Save undo history
 vim.opt.undofile = true
@@ -77,7 +79,7 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
+vim.opt.list = false
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
@@ -229,6 +231,7 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
         ['<leader>p'] = { name = '[P]references', _ = 'which_key_ignore' },
+        ['<leader>pl'] = { name = '[L]ine Preferences', _ = 'which_key_ignore' },
         ['<leader>th'] = { name = 'Toggle [H]orizontal Terminal' },
         ['<leader>tv'] = { name = 'Toggle [V]ertical Terminal' },
         ['<leader>tn'] = { name = 'Toggle Terminal in [N]ew Tab' },

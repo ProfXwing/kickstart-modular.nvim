@@ -1,7 +1,7 @@
 return {
   'zbirenbaum/copilot.lua',
   cmd = 'Copilot',
-  event = 'InsertEnter',
+  event = 'VeryLazy',
   config = function()
     require('copilot').setup {
       suggestion = {
@@ -12,9 +12,9 @@ return {
           prev = '<C-[>',
           dismiss = '<Esc>',
         },
-        disabled_filetypes = {
-          'NvimTree',
-        },
+      },
+      filetypes = {
+        go = false,
       },
     }
   end,
