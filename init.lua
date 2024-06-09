@@ -94,8 +94,8 @@ vim.opt.scrolloff = 10
 -- Display long lines as just one line
 vim.opt.wrap = false
 
--- buffer tab labels
-vim.opt.guitablabel = '[%N] %t'
+-- buffer tab labels note: this isn't real anymore
+-- vim.opt.guitablabel = '[%N] %t'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
