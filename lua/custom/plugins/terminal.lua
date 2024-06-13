@@ -19,6 +19,7 @@ end
 
 return {
   'akinsho/toggleterm.nvim',
+  event = 'VeryLazy',
   version = '*',
   config = true,
   keys = terminal_keys,

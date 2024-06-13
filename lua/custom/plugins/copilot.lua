@@ -1,13 +1,13 @@
 return {
   'zbirenbaum/copilot.lua',
   cmd = 'Copilot',
-  event = 'VeryLazy',
+  event = 'InsertEnter',
   config = function()
     require('copilot').setup {
       suggestion = {
         auto_trigger = true,
         keymap = {
-          accept = '<C-Enter>',
+          accept = '<C-CR>',
           next = '<C-]>',
           prev = '<C-[>',
           dismiss = '<Esc>',

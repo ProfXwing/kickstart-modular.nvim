@@ -66,5 +66,10 @@ return {
         -- ['Cargo.toml'] = 'crates',
       },
     }
+
+    require('cord').hide_presence()
   end,
+  keys = {
+    { '<leader>pd', '<cmd>CordTogglePresence<CR>', desc = 'Toggle Discord Rich Presence' },
+  },
 }

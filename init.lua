@@ -14,6 +14,39 @@
 ========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
 --]]
 
+vim.loader.enable()
+
+-- MacOS specifically:
+-- TODO: add a check for macos with different keybinds in windows/linux
+
+-- Delete words backward/forward
+vim.keymap.set('i', '<A-BS>', '<C-w>', { noremap = true })
+vim.keymap.set('i', '<A-Del>', '<C-o>dw', { noremap = true })
+
+-- Move cursor one word backward/forward
+vim.keymap.set({ 'n', 'v', 'i' }, '<A-Left>', '<C-o>b', { noremap = true })
+vim.keymap.set({ 'n', 'v', 'i' }, '<A-Right>', '<C-o>w', { noremap = true })
+
+-- Shift + arrow keys start selection
+vim.keymap.set({ 'n', 'i' }, '<S-Left>', '<Esc>vh', { noremap = true })
+vim.keymap.set({ 'n', 'i' }, '<S-Right>', '<Esc>vl', { noremap = true })
+vim.keymap.set({ 'n', 'i' }, '<S-Up>', '<Esc>vk', { noremap = true })
+vim.keymap.set({ 'n', 'i' }, '<S-Down>', '<Esc>vj', { noremap = true })
+
+-- Move forward/back a word in all modes with Alt Left/Right (changes due to iTerm)
+vim.keymap.set({ 'n', 'v' }, '<A-f>', 'w', { noremap = true })
+vim.keymap.set({ 'n', 'v' }, '<A-b>', 'b', { noremap = true })
+vim.keymap.set({ 'i' }, '<A-f>', '<cmd>normal w<CR>', { noremap = true })
+vim.keymap.set({ 'i' }, '<A-b>', '<cmd>normal b<CR>', { noremap = true })
+
+-- Move lines up/down
+vim.keymap.set('i', '<A-Up>', '<cmd>move -2<CR>', { noremap = true })
+vim.keymap.set('i', '<A-Down>', '<cmd>move +1<CR>', { noremap = true })
+
+-- Move selected lines up/down
+vim.api.nvim_set_keymap('x', '<A-Up>', ":move '<-2'<CR>gv-gv", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('x', '<A-Down>', ":move '>+1'<CR>gv-gv", { noremap = true, silent = true })
+
 -- nvim-tree configuration
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -147,6 +180,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_user_command('FormatDisable', function(args)
+  if args.bang then
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = false
+  end
+end, { desc = 'Disable autoformat-on-save', bang = true })
+
+vim.api.nvim_create_user_command('FormatEnable', function()
+  vim.b.disable_autoformat = false
+  vim.g.disable_autoformat = false
+end, {
+  desc = 'Enable autoformat-on-save',
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -167,9 +215,16 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
+
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  {
+    'nmac427/guess-indent.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('guess-indent').setup {}
+    end,
+  }, -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -218,7 +273,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VeryLazy', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
 
@@ -231,6 +286,7 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
         ['<leader>p'] = { name = '[P]references', _ = 'which_key_ignore' },
+        ['<leader>l'] = { name = '[L]sp Actions', _ = 'which_key_ignore' },
         ['<leader>pl'] = { name = '[L]ine Preferences', _ = 'which_key_ignore' },
         ['<leader>th'] = { name = 'Toggle [H]orizontal Terminal' },
         ['<leader>tv'] = { name = 'Toggle [V]ertical Terminal' },
@@ -254,7 +310,7 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -360,6 +416,7 @@ require('lazy').setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    event = 'VeryLazy',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -519,7 +576,6 @@ require('lazy').setup({
         gopls = {},
 
         -- clangd = {},
-        -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -580,7 +636,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    lazy = false,
+    event = 'BufWritePre',
     keys = {
       {
         '<leader>f',
@@ -594,6 +650,10 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
@@ -733,6 +793,7 @@ require('lazy').setup({
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'catppuccin/nvim',
     name = 'catppuccin',
+    -- event = 'VeryLazy',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
@@ -865,6 +926,7 @@ require('lazy').setup({
 })
 
 require 'custom.keymaps.preferences'
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
