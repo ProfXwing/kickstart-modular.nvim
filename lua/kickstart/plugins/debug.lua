@@ -1,13 +1,4 @@
--- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
-
 return {
-  -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well
   event = 'VeryLazy',
@@ -45,6 +36,16 @@ return {
         'delve',
       },
     }
+    dap.adapters.delve = {
+      type = 'server',
+      port = '${port}',
+      executable = {
+        command = 'iterm',
+        args = { 'dlv dap -l 127.0.0.1:${port}; exit' },
+      },
+    }
+
+    dap.defaults.fallback.terminal_win_cmd = '50vsplit new'
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -77,6 +78,11 @@ return {
         },
       },
     }
+
+    local namespace = vim.api.nvim_create_namespace 'dap-hlng'
+    vim.api.nvim_set_hl(namespace, 'DapBreakpoint', { fg = '#eaeaeb', bg = '#ffffff' })
+
+    vim.fn.sign_define('DapBreakpoint', { text = '•', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })

@@ -22,7 +22,7 @@ return {
         show_repository = true, -- Display 'View repository' button linked to repository url, if any
         show_cursor_position = false, -- Display line and column number of cursor's position
         swap_fields = false, -- If enabled, workspace is displayed first
-        workspace_blacklist = {}, -- List of workspace names to hide
+        workspace_blacklist = { 'andrew' }, -- List of workspace names to hide
       },
       lsp = {
         show_problem_count = false, -- Display number of diagnostics problems
