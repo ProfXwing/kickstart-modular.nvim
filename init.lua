@@ -50,6 +50,9 @@ vim.keymap.set('i', '<S-Tab>', '<C-d>', { noremap = true })
 vim.api.nvim_set_keymap('x', '<A-Up>', ":move '<-2'<CR>gv-gv", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('x', '<A-Down>', ":move '>+1'<CR>gv-gv", { noremap = true, silent = true })
 
+vim.keymap.set('n', '<C-y>', '<C-i>')
+vim.keymap.set('n', '<C-l>', '<C-o>')
+
 -- nvim-tree configuration
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
