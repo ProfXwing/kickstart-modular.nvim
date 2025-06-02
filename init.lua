@@ -13,6 +13,9 @@
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
 ========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
 --]]
+--
+vim.o.termguicolors = false
+vim.o.relativenumber = true
 
 vim.loader.enable()
 
@@ -45,6 +48,9 @@ vim.keymap.set('i', '<A-Down>', '<cmd>move +1<CR>', { noremap = true })
 
 -- Unindent line and move caret left by tab amount
 vim.keymap.set('i', '<S-Tab>', '<C-d>', { noremap = true })
+
+vim.api.nvim_set_keymap('n', '<Up>', 'v:count == 0 ? "g<Up>" : "<Up>"', { expr = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<Down>', 'v:count == 0 ? "g<Down>" : "<Down>"', { expr = true, noremap = true })
 
 -- Move selected lines up/down
 vim.api.nvim_set_keymap('x', '<A-Up>', ":move '<-2'<CR>gv-gv", { noremap = true, silent = true })
@@ -285,28 +291,25 @@ require('lazy').setup({
     event = 'VeryLazy', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
+      local wk = require 'which-key'
 
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
-        ['<leader>p'] = { name = '[P]references', _ = 'which_key_ignore' },
-        ['<leader>l'] = { name = '[L]sp Actions', _ = 'which_key_ignore' },
-        ['<leader>pl'] = { name = '[L]ine Preferences', _ = 'which_key_ignore' },
-        ['<leader>th'] = { name = 'Toggle [H]orizontal Terminal' },
-        ['<leader>tv'] = { name = 'Toggle [V]ertical Terminal' },
-        ['<leader>tn'] = { name = 'Toggle Terminal in [N]ew Tab' },
-        -- ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        -- ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-      }
-      -- visual mode
-      -- require('which-key').register({
-      --   ['<leader>h'] = { 'Git [H]unk' },
-      -- }, { mode = 'v' })
+      wk.add({
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]erminal' },
+        { '<leader>p', group = '[P]references' },
+        { '<leader>l', group = '[L]sp Actions' },
+        { '<leader>pl', group = '[L]ine Preferences' },
+
+        { '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', desc = 'Toggle [H]orizontal Terminal' },
+        { '<leader>tv', '<cmd>ToggleTerm direction=vertical<cr>', desc = 'Toggle [V]ertical Terminal' },
+        { '<leader>tn', '<cmd>ToggleTerm direction=float<cr>', desc = 'Toggle Terminal in [N]ew Tab' },
+      }, {
+        mode = 'n',
+      })
     end,
   },
 
@@ -582,11 +585,19 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         ruff_lsp = {},
+        pyright = {},
         gopls = {},
+        elixirls = {},
         eslint_d = {},
+        fsautocomplete = {},
+        typst_lsp = {
+          settings = {
+            exportPdf = 'onType',
+          },
+        },
+        java_language_server = {},
 
         -- clangd = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -611,6 +622,11 @@ require('lazy').setup({
             },
           },
         },
+      }
+
+      require('lspconfig').sourcekit.setup {
+        capabilities = capabilities,
+        cmd = { vim.trim(vim.fn.system 'xcrun -f sourcekit-lsp') },
       }
 
       -- Ensure the servers and tools above are installed
@@ -795,27 +811,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    -- event = 'VeryLazy',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin-macchiato'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -879,6 +874,7 @@ require('lazy').setup({
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
+      require('nvim-treesitter.install').compilers = { 'clang', 'cc', 'gcc-11', 'gcc-12' }
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 

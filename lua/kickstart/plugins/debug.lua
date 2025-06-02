@@ -40,8 +40,8 @@ return {
       type = 'server',
       port = '${port}',
       executable = {
-        command = 'iterm',
-        args = { 'dlv dap -l 127.0.0.1:${port}; exit' },
+        command = 'launch_dlv',
+        args = { '${port}' },
       },
     }
 
