@@ -874,7 +874,7 @@ require('lazy').setup({
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
-      require('nvim-treesitter.install').compilers = { 'clang', 'cc', 'gcc-11', 'gcc-12' }
+      require('nvim-treesitter.install').compilers = { 'clang', 'cc', 'gcc-11', 'gcc-12', 'gcc' }
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 

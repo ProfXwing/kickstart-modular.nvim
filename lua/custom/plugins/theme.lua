@@ -12,6 +12,8 @@ local function isDarkTheme()
         is_dark = true
       end
     end
+  else
+    is_dark = true
   end
 
   return is_dark
