@@ -1,17 +1,3 @@
--- NOTE: Plugins can also be configured to run Lua code when they are loaded.
---
--- This is often very useful to both group configuration, as well as handle
--- lazy loading plugins that don't need to be loaded immediately at startup.
---
--- For example, in the following configuration, we use:
---  event = 'VimEnter'
---
--- which loads which-key before all the UI elements are loaded. Events can be
--- normal autocommands events (`:help autocmd-events`).
---
--- Then, because we use the `opts` key (recommended), the configuration runs
--- after the plugin has been loaded as `require(MODULE).setup(opts)`.
-
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -59,9 +45,20 @@ return {
 
       -- Document existing key chains
       spec = {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]erminal' },
+        { '<leader>p', group = '[P]references' },
+        { '<leader>l', group = '[L]sp Actions' },
+        { '<leader>pl', group = '[L]ine Preferences' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+
+        { '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', desc = 'Toggle [H]orizontal Terminal' },
+        { '<leader>tv', '<cmd>ToggleTerm direction=vertical<cr>', desc = 'Toggle [V]ertical Terminal' },
+        { '<leader>tn', '<cmd>ToggleTerm direction=float<cr>', desc = 'Toggle Terminal in [N]ew Tab' },
       },
     },
   },
