@@ -15,6 +15,7 @@ return {
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    event = 'VeryLazy',
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
@@ -168,8 +169,6 @@ return {
         fsautocomplete = {},
         tinymist = {},
         java_language_server = {},
-
-
 
         lua_ls = {
           -- cmd = {...},

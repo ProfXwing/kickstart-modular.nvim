@@ -1,15 +1,7 @@
--- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
-
 return {
-  -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
-  -- NOTE: And you can specify dependencies as well
+  event = 'VeryLazy',
+
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
@@ -97,6 +89,15 @@ return {
         'delve',
       },
     }
+
+    -- dap.adapters.delve = {
+    --   type = 'server',
+    --   port = '${port}',
+    --   executable = {
+    --     command = 'launch_dlv',
+    --     args = { '${port}' },
+    --   },
+    -- }
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
