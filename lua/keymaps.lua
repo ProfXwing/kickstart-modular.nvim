@@ -82,7 +82,6 @@ vim.keymap.set('n', '<leader>pln', '<cmd>set number!<CR>', { desc = 'Toggle Line
 -- Toggle whitespace characters
 vim.keymap.set('n', '<leader>pw', '<cmd>set list!<CR>', { desc = 'Toggle [W]hitespace Characters' })
 
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -108,6 +107,16 @@ vim.api.nvim_create_user_command('FormatEnable', function()
   vim.g.disable_autoformat = false
 end, {
   desc = 'Enable autoformat-on-save',
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*',
+  callback = function()
+    local dir = vim.fn.expand '%:p:h'
+    if vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, 'p')
+    end
+  end,
 })
 
 -- vim: ts=2 sts=2 sw=2 et
