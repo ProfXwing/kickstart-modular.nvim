@@ -15,7 +15,6 @@ return {
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    event = 'VeryLazy',
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
@@ -162,7 +161,6 @@ return {
       local capabilities = require('blink.cmp').get_lsp_capabilities()
       local servers = {
         ruff = {},
-        pyright = {},
         gopls = {},
         elixirls = {},
         eslint_d = {},
@@ -194,8 +192,9 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
+        automatic_enable = true,
+        automatic_installation = true,
+        ensure_installed = {},
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
