@@ -167,6 +167,7 @@ return {
         fsautocomplete = {},
         tinymist = {},
         java_language_server = {},
+        angularls = {},
 
         lua_ls = {
           -- cmd = {...},
